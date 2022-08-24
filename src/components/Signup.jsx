@@ -1,0 +1,140 @@
+import React, { useState, useContext, useEffect } from 'react'
+import { Card, CardContent, TextField, Typography, Button,LinearProgress } from '@mui/material'
+import { Link, useNavigate } from 'react-router-dom';
+import dialogContext from '../contexts/dialog/dialogContext';
+import noteContext from '../contexts/notes/noteContext';
+
+const Signup = () => {
+  let navigate = useNavigate();
+
+  const { setSnakMsg } = useContext(dialogContext)
+  const { setToken } = useContext(noteContext)
+
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [cpassword, setCpassword] = useState('')
+  
+  const [loading, setLoading] = useState(false)
+
+  const [error, setError] = useState({
+    error: '',
+    emptyFields: [],
+    invalidFields: []
+  })
+
+  useEffect(() => {
+    if(localStorage.getItem('token')){
+      navigate('/')
+    }
+  },[])
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    const res = await fetch('https://backend-of-reactnotes.herokuapp.com/api/auth/signup',{
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({name, email, password})
+    })
+    const json = await res.json()
+    if(res.ok) {
+      console.log(json)
+      if(json.authToken) {
+        localStorage.setItem('token', json.authToken)
+        setToken(json.authToken)
+        setLoading(false)
+        navigate('/')
+        setSnakMsg('Account Created Successfully')
+      }
+    }else{
+      // Handle Error
+      console.log(json) 
+      setError(json)
+    }
+    setLoading(false)
+  }
+
+  return (
+    <div className='grid-login' style={{marginTop: 90}}>
+      <div></div>
+      <Card variant='outlined'>
+        <div style={{height: 2}}>
+          {loading && <LinearProgress />}
+        </div>
+        <CardContent>
+            <form>
+              <Typography variant="h5" component="div">
+                  SIGN UP
+              </Typography>
+              <TextField
+                  type="text"
+                  id="txtName"
+                  margin="normal"
+                  label="Name"
+                  required
+                  fullWidth
+                  value={name}
+                  onChange={(e)=>setName(e.target.value)}
+                  error={error.emptyFields!== undefined && error.emptyFields.includes('name') && name.length===0}
+              />
+              <TextField
+                  type="email"
+                  id="txtEmail"
+                  margin="normal"
+                  label="Email"
+                  required
+                  fullWidth
+                  value={email}
+                  onChange={(e)=>setEmail(e.target.value)}
+                  error={error.emptyFields!== undefined && error.emptyFields.includes('email') && email.length===0 || 
+                        (error.invalidFields!==undefined && error.invalidFields.includes('email')) }
+                  helperText={ error.invalidFields!==undefined && error.invalidFields.includes('email') && error.error }
+              />
+              <TextField
+                  type="password"
+                  id="pwdPassword"
+                  margin="normal"
+                  label="Password"
+                  required
+                  fullWidth
+                  value={password}
+                  onChange={(e)=>setPassword(e.target.value)}
+                  error={ error.emptyFields!==undefined && error.emptyFields.includes('password') && password.length===0 || 
+                        (error.invalidFields!==undefined && error.invalidFields.includes('password')) }
+                  helperText={ error.invalidFields!==undefined && error.invalidFields.includes('password') && error.error }
+              />
+              <TextField
+                  type="password"
+                  id="pwdCpassword"
+                  margin="normal"
+                  label="Confirm password"
+                  required
+                  fullWidth
+                  value={cpassword}
+                  onChange={(e)=>setCpassword(e.target.value)}
+                  error={ password!==cpassword }
+                  helperText={ password!==cpassword && 'Password and Confirm Password are not same' }
+              />
+              <Button
+                style={{width: '50%', fontSize: 18, marginTop: 16}}
+                variant="outlined"
+                onClick={handleSubmit}
+              >
+                Sign Up
+              </Button>
+              {error.error.length!==0 && error.invalidFields===undefined && <h4 className='error'>{error.error}</h4>}
+            </form>
+            <Typography style={{marginTop: 20}} variant="h6" component="div">
+              Already An User? <Link to='/login'>Login Now</Link>
+            </Typography>
+        </CardContent>
+      </Card>
+      <div></div>
+    </div>
+  )
+}
+
+export default Signup
