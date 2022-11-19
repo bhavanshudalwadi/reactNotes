@@ -58,7 +58,7 @@ const AddNote = () => {
     // }
 
     return (
-            <div className='add-note' style="background-color: #fff; color: #000;">
+            <div className='add-note' style={{backgroundColor: '#fff', Color: '#000'}}>
                 {edit._id!==''?(<h2>Update Note</h2>):(<h2>Add New Note</h2>)}
                 <form id="add-note">
                     <TextField
