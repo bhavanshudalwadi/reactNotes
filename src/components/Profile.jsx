@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Card, CardContent, TextField, Typography, Button, LinearProgress } from '@mui/material'
+import noteContext from '../contexts/notes/noteContext';
 
 const Profile = () => {
     const navigate = useNavigate();
 
+    const { host } = useContext(noteContext)
+    
     const [userDetails, setUserDetails] = useState({
         name: '',
         email: '',
@@ -19,7 +22,7 @@ const Profile = () => {
         }else{
             const fetchData = async () => {
                 setLoading(true)
-                const res = await fetch('https://backend-of-reactnotes.herokuapp.com/api/auth/getuser',{
+                const res = await fetch(`${host}/api/auth/getuser`,{
                     method: 'GET',
                     headers: {
                         'Auth-Token': localStorage.getItem('token')
