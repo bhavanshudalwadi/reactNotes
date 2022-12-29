@@ -67,7 +67,7 @@ const Navbar = () => {
     <AppBar position="fixed">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Avatar alt="react Notes" sx={{display: { xs: 'none', md: 'flex' }, mr: 1}} src="./imgs/icon.jpg"/>
+          <Avatar alt="react Notes" sx={{display: { xs: 'none', md: 'flex' }, mr: 1}} src="imgs/icon.jpg"/>
           <Typography
             variant="h6"
             noWrap
