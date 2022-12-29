@@ -8,7 +8,7 @@ const Login = () => {
   let navigate = useNavigate();
 
   const { setSnakMsg } = useContext(dialogContext)
-  const { setToken } = useContext(noteContext)
+  const { host, setToken } = useContext(noteContext)
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -30,7 +30,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    const res = await fetch('https://backend-of-reactnotes.herokuapp.com/api/auth/login',{
+    const res = await fetch(`${host}/api/auth/login`,{
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
