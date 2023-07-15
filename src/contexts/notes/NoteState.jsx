@@ -8,7 +8,9 @@ const NoteState = ({ children }) => {
 
     const [token, setToken] = useState(localStorage.getItem('token')?localStorage.getItem('token'):null)
 
-    const host = 'https://backend-of-reactnotes.up.railway.app'
+    // const host = 'https://backend-of-reactnotes.up.railway.app'
+    const host = 'https://react-notes-backend.vercel.app'
+    
     const [notes, setNotes] = useState([])
     const [loading, setLoading] = useState(false)
     const [edit, setEdit] = useState({
